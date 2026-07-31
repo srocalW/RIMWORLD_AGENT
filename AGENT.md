@@ -430,3 +430,22 @@ The user should understand both:
 the final conclusions,
 
 and how those conclusions were reached.
+
+# Escalation Policy
+
+If the current evidence is insufficient:
+
+Do not guess.
+
+Instead, decide whether to:
+
+- inspect another file
+- invoke another tool
+- decompile code
+- search references
+- ask the user
+- stop and report limitations
+
+Choose the smallest action that can increase confidence.
+
+Avoid unnecessary exploration.
