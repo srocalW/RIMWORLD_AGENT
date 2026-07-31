@@ -2,586 +2,172 @@
 
 # Analysis Modes
 
-The RimWorld Development Agent supports multiple analysis modes.
+This document defines **how the agent approaches a task**.
 
-A mode defines **how the agent should approach a task**, not merely how the final report should look.
+Rather than providing many fixed workflows, the agent selects:
 
-Unless explicitly specified by the user, select the most appropriate mode automatically.
+- A **Task**
+- An **Analysis Depth**
 
-If multiple modes are relevant, combine them and explain why.
-
----
-
-# Automatic Mode Selection
-
-Determine the user's primary goal before starting.
-
-Examples:
-
-| User Request | Suggested Mode |
-|---------------|----------------|
-| "Introduce this mod." | Overview |
-| "How does this mod work?" | Learning |
-| "Analyze the implementation." | Reverse |
-| "Why does this crash?" | Debug |
-| "Is this compatible?" | Compatibility |
-| "Can I learn from this project?" | Learning + Reverse |
-| "Optimize this mod." | Performance |
-| "Port this mod." | Porting |
-
-Always explain the selected mode during the Execution Plan.
+The workflow should adapt dynamically to the project, available evidence and the user's objective.
 
 ---
 
-# Overview Mode
+# Task
 
-## Purpose
+Choose the task that best matches the user's goal.
 
-Understand what the project does.
+## Analyze
 
-Build an overall understanding before investigating implementation details.
+Understand, explain, or study the project.
 
----
+Typical objectives include:
 
-## Typical Scenarios
-
-- First contact with a new project
-- Quickly evaluating a mod
-- Deciding whether deeper analysis is worthwhile
-
----
-
-## Priority
-
-Highest priority:
-
-Gameplay
-
-Major systems
-
-Dependencies
-
-Project structure
-
-Lowest priority:
-
-Implementation details
-
-Utility classes
-
-Internal algorithms
-
----
-
-## Tool Strategy
-
-Prefer:
-
-Documentation
-
-XML
-
-Project structure
-
-Metadata
-
-Only inspect source code when required.
-
----
-
-## Depth
-
-Low
-
-The goal is understanding, not reverse engineering.
-
----
-
-## Stop Condition
-
-Stop when the project's purpose, architecture and major systems are understood.
-
----
-
-## Expected Deliverables
-
-- Overview
-- Main features
-- Architecture summary
-- Dependencies
-- Major gameplay systems
-
----
-
-# Learning Mode
-
-## Purpose
-
-Understand how experienced developers designed the project.
-
-Focus on ideas rather than exhaustive implementation.
-
----
-
-## Typical Scenarios
-
-- Studying high-quality mods
-- Learning RimWorld development
-- Understanding design patterns
-
----
-
-## Priority
-
-Highest priority:
-
-Architecture
-
-Design decisions
-
-Runtime flow
-
-Framework usage
-
-Patterns
-
-Lower priority:
-
-Every helper method
-
-Every utility class
-
----
-
-## Tool Strategy
-
-Prefer:
-
-Source code
-
-Call chains
-
-Architecture
-
-Framework integration
-
----
-
-## Depth
-
-Medium
-
-Analyze representative implementations.
-
-Avoid unnecessary reverse engineering.
-
----
-
-## Stop Condition
-
-Stop when the design philosophy and important implementation ideas have been understood.
-
----
-
-## Expected Deliverables
-
-- Architecture
-- Runtime flow
-- Design patterns
-- Extension points
-- Developer takeaways
-
----
-
-# Reverse Mode
-
-## Purpose
-
-Understand implementation in detail.
-
-Reconstruct runtime behavior from available evidence.
-
----
-
-## Typical Scenarios
-
+- Understanding a mod
+- Learning implementation ideas
 - Reverse engineering
-- Compatibility work
-- Creating extensions
-- Studying DLL behavior
+- Studying architecture
+- Exploring framework behavior
+
+The emphasis is on understanding rather than solving a specific problem.
 
 ---
 
-## Priority
+## Debug
 
-Highest priority:
+Identify, verify and explain problems.
 
-Source code
-
-Harmony
-
-Runtime
-
-Call chains
-
-Framework interactions
-
----
-
-## Tool Strategy
-
-Prefer:
-
-Decompiler
-
-MCP
-
-Language server
-
-Reference search
-
-XML
-
----
-
-## Depth
-
-High
-
-Investigate implementation until runtime behavior is sufficiently explained.
-
----
-
-## Stop Condition
-
-Stop when implementation, runtime behavior and important interactions have been reconstructed.
-
-Avoid exhaustive inspection of unrelated helper classes.
-
----
-
-## Expected Deliverables
-
-- Runtime flow
-- Implementation analysis
-- Harmony behavior
-- Call chains
-- Important classes
-- Evidence chain
-
----
-
-# Debug Mode
-
-## Purpose
-
-Locate and explain problems.
-
----
-
-## Typical Scenarios
+Typical objectives include:
 
 - Exceptions
 - Compatibility issues
-- Broken gameplay
 - Unexpected behavior
+- Runtime errors
+- Performance regressions
+
+The emphasis is on finding evidence, identifying root causes and proposing solutions.
 
 ---
 
-## Priority
+# Analysis Depth
 
-Highest priority:
+Analysis depth determines **how deeply the project should be investigated**, not how long the response should be.
 
-Logs
+Always begin with the shallowest depth that can answer the user's question.
 
-Exceptions
-
-Harmony patches
-
-Runtime flow
-
-Patch order
-
-Dependencies
+Increase the depth only when additional evidence is required.
 
 ---
 
-## Tool Strategy
+## Level 1 — Content
 
-Prefer:
+Goal:
 
-Logs
+Understand **what** the mod provides.
 
-Stack traces
+Focus on:
 
-Search
+- Features
+- Gameplay
+- XML definitions
+- Project structure
+- Dependencies
+- Public interfaces
 
-Runtime evidence
+Avoid unnecessary implementation details.
 
-Debugger (if available)
-
----
-
-## Depth
-
-Investigate only information relevant to the issue.
-
-Avoid unrelated reverse engineering.
+Stop when the user can clearly understand what the project does.
 
 ---
 
-## Stop Condition
+## Level 2 — Architecture
 
-Stop when the root cause is identified or all available evidence has been exhausted.
+Goal:
 
-Clearly distinguish confirmed causes from hypotheses.
+Understand **how** the mod works.
 
----
+Focus on:
 
-## Expected Deliverables
+- System architecture
+- Module responsibilities
+- Runtime flow
+- Data flow
+- Harmony patches
+- XML ↔ Code interaction
+- Representative implementations
 
-- Root cause analysis
-- Evidence
-- Reproduction conditions
-- Possible fixes
-- Remaining uncertainties
+Do not inspect every class.
 
----
+Focus on explaining the design.
 
-# Performance Mode
-
-## Purpose
-
-Identify runtime bottlenecks.
+Stop when the overall implementation strategy is understood.
 
 ---
 
-## Typical Scenarios
+## Level 3 — Implementation
 
-- Slow TPS
-- Long loading times
-- Large modpacks
-- Expensive Harmony patches
+Goal:
 
----
+Understand **how the implementation actually executes**.
 
-## Priority
+Focus on:
 
-Highest priority:
+- Decompiled source code
+- Runtime call chains
+- Harmony execution flow
+- Critical algorithms
+- Reflection
+- Generic implementations
+- Compiler-generated code
+- Performance-critical logic
 
-Tick logic
+Investigate only details that support the current objective.
 
-Caching
+Avoid unnecessary exploration.
 
-Collection usage
-
-Harmony
-
-Repeated allocation
-
-Expensive searches
+Stop when the required implementation details have been verified.
 
 ---
 
-## Tool Strategy
+# Adaptive Depth
 
-Prefer:
+Analysis depth is dynamic.
 
-Profiler output
+Start with the minimum depth required.
 
-Runtime evidence
+Increase the depth only when:
 
-Call frequency
+- existing evidence is insufficient;
+- runtime behavior cannot be explained;
+- implementation details become relevant;
+- the user explicitly requests deeper analysis.
 
-Source code
+Whenever the depth changes, briefly explain why.
 
----
+Example:
 
-## Depth
+Content
 
-Investigate only performance-critical paths.
+↓
 
----
+Architecture
 
-## Stop Condition
+Reason:
 
-Stop when major bottlenecks and optimization opportunities have been identified.
-
----
-
-## Expected Deliverables
-
-- Bottlenecks
-- Evidence
-- Optimization ideas
-- Estimated impact
+Understanding the XML alone is insufficient to explain the runtime behavior.
 
 ---
 
-# Compatibility Mode
+# General Guidelines
 
-## Purpose
+Prefer understanding over exhaustive inspection.
 
-Evaluate interaction with other mods.
+Prefer representative implementations over every implementation.
 
----
+Prefer evidence over assumptions.
 
-## Typical Scenarios
+Choose the simplest analysis depth that satisfies the user's objective.
 
-- Mod conflicts
-- Harmony conflicts
-- Missing dependencies
-- Load order issues
+Only investigate deeper layers when they provide meaningful additional insight.
 
----
-
-## Priority
-
-Highest priority:
-
-Harmony
-
-Dependencies
-
-Load order
-
-Framework usage
-
-Shared definitions
-
----
-
-## Tool Strategy
-
-Prefer:
-
-Harmony patches
-
-Dependency metadata
-
-Framework documentation
-
----
-
-## Depth
-
-Focus only on compatibility-relevant behavior.
-
----
-
-## Stop Condition
-
-Stop when important compatibility risks have been identified.
-
----
-
-## Expected Deliverables
-
-- Compatibility summary
-- Conflict risks
-- Required dependencies
-- Suggested load order
-
----
-
-# Porting Mode
-
-## Purpose
-
-Assist migration between RimWorld versions.
-
----
-
-## Typical Scenarios
-
-- Updating old mods
-- API migration
-- Framework upgrades
-
----
-
-## Priority
-
-Highest priority:
-
-Deprecated APIs
-
-Framework changes
-
-XML differences
-
-Compile errors
-
----
-
-## Tool Strategy
-
-Prefer:
-
-Compiler diagnostics
-
-API documentation
-
-Reference search
-
----
-
-## Depth
-
-Analyze only migration-relevant components.
-
----
-
-## Stop Condition
-
-Stop when all required migration work has been identified.
-
----
-
-## Expected Deliverables
-
-- Migration checklist
-- API changes
-- XML changes
-- Required code updates
-
----
-
-# Combining Modes
-
-Tasks often require more than one mode.
-
-Examples:
-
-Learning + Reverse
-
-Overview + Compatibility
-
-Debug + Reverse
-
-Performance + Debug
-
-When combining modes:
-
-Explain:
-
-- why multiple modes are necessary
-- which mode has higher priority
-- how analysis depth changes
-
----
-
-# Mode Switching
-
-The agent may switch modes when new evidence changes the nature of the task.
-
-Whenever this happens:
-
-Explain:
-
-- previous mode
-- new mode
-- reason
-- expected benefits
-
-Never switch modes silently.
+A deeper analysis is not necessarily a better analysis.
