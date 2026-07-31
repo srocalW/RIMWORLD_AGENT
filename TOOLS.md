@@ -15,11 +15,9 @@ Prefer:
 
 ## User Capabilities
 
-The user may provide additional tools
+The user may provide additional tools:
 
-Examples:
-
-- ILSpy
+- ILSpy extension
 - RiMCP_hybrid
 - GitHub MCP
 - Local documentation
