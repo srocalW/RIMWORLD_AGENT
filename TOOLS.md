@@ -18,7 +18,7 @@ Prefer:
 The user may provide additional tools:
 
 - ILSpy extension
-- RiMCP_hybrid
+- RimWorld MCP
 - GitHub MCP
 - Local documentation
 - Workspace script
