@@ -1,173 +1,74 @@
 # MODES.md
 
-# Analysis Modes
-
-This document defines **how the agent approaches a task**.
-
-Rather than providing many fixed workflows, the agent selects:
-
-- A **Task**
-- An **Analysis Depth**
-
-The workflow should adapt dynamically to the project, available evidence and the user's objective.
-
----
-
 # Task
 
-Choose the task that best matches the user's goal.
-
-## Analyze
-
-Understand, explain, or study the project.
-
-Typical objectives include:
-
-- Understanding a mod
-- Learning implementation ideas
-- Reverse engineering
-- Studying architecture
-- Exploring framework behavior
-
-The emphasis is on understanding rather than solving a specific problem.
-
----
-
-## Debug
-
-Identify, verify and explain problems.
-
-Typical objectives include:
-
-- Exceptions
-- Compatibility issues
-- Unexpected behavior
-- Runtime errors
-- Performance regressions
-
-The emphasis is on finding evidence, identifying root causes and proposing solutions.
+- Analyze — Understand the project.
+- Debug — Find and explain problems.
 
 ---
 
 # Analysis Depth
 
-Analysis depth determines **how deeply the project should be investigated**, not how long the response should be.
+Choose the minimum depth that answers the user's question.
 
-Always begin with the shallowest depth that can answer the user's question.
+## Content
 
-Increase the depth only when additional evidence is required.
-
----
-
-## Level 1 — Content
-
-Goal:
-
-Understand **what** the mod provides.
+Understand what the mod provides.
 
 Focus on:
 
 - Features
 - Gameplay
-- XML definitions
+- XML
 - Project structure
 - Dependencies
-- Public interfaces
 
-Avoid unnecessary implementation details.
-
-Stop when the user can clearly understand what the project does.
+Avoid implementation details.
 
 ---
 
-## Level 2 — Architecture
+## Architecture
 
-Goal:
-
-Understand **how** the mod works.
+Understand how the mod works.
 
 Focus on:
 
 - System architecture
-- Module responsibilities
 - Runtime flow
-- Data flow
 - Harmony patches
+- Module interaction
 - XML ↔ Code interaction
-- Representative implementations
 
-Do not inspect every class.
-
-Focus on explaining the design.
-
-Stop when the overall implementation strategy is understood.
+Explain representative implementations instead of every class.
 
 ---
 
-## Level 3 — Implementation
+## Implementation
 
-Goal:
-
-Understand **how the implementation actually executes**.
+Understand how the implementation executes.
 
 Focus on:
 
-- Decompiled source code
-- Runtime call chains
-- Harmony execution flow
+- Decompiled source
+- Call chains
+- Runtime behavior
 - Critical algorithms
 - Reflection
-- Generic implementations
-- Compiler-generated code
 - Performance-critical logic
 
-Investigate only details that support the current objective.
-
-Avoid unnecessary exploration.
-
-Stop when the required implementation details have been verified.
+Investigate only details relevant to the current task.
 
 ---
 
-# Adaptive Depth
+# Depth Escalation
 
-Analysis depth is dynamic.
-
-Start with the minimum depth required.
+Start with the shallowest depth.
 
 Increase the depth only when:
 
-- existing evidence is insufficient;
+- current evidence is insufficient;
 - runtime behavior cannot be explained;
-- implementation details become relevant;
-- the user explicitly requests deeper analysis.
+- implementation details become necessary;
+- the user requests deeper analysis.
 
-Whenever the depth changes, briefly explain why.
-
-Example:
-
-Content
-
-↓
-
-Architecture
-
-Reason:
-
-Understanding the XML alone is insufficient to explain the runtime behavior.
-
----
-
-# General Guidelines
-
-Prefer understanding over exhaustive inspection.
-
-Prefer representative implementations over every implementation.
-
-Prefer evidence over assumptions.
-
-Choose the simplest analysis depth that satisfies the user's objective.
-
-Only investigate deeper layers when they provide meaningful additional insight.
-
-A deeper analysis is not necessarily a better analysis.
+Briefly explain why the depth changed.
